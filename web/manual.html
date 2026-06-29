@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユーザーマニュアル - Teniko(TiffToPdfConverter)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <header class="hero" style="padding: 60px 0 40px;">
+        <div class="container text-center">
+            <h1 class="logo-title" style="font-size: 3rem;">Teniko</h1>
+            <p class="tagline" style="margin-bottom: 15px;">ユーザーマニュアル</p>
+            <a href="index.html" class="btn-primary" style="padding: 10px 24px; font-size: 0.95rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); box-shadow: none;">← 解説ページへ戻る</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 概要 -->
+        <section class="detail-card glass info-card">
+            <h3>1. 概要</h3>
+            <p><code>Teniko(TiffToPdfConverter)</code> は、レガシーな「Wangアノテーション（コダック・アノテーション）」が付与されたTIFFファイルを読み込み、PDFファイルへ変換するコマンドラインツールです。<br>
+            TIFF画像上のWangアノテーションデータを抽出し、モダンなPDFの標準注釈（アノテーション）として埋め込みます。</p>
+        </section>
+
+        <!-- 動作環境 -->
+        <section class="detail-card glass info-card">
+            <h3>2. 動作環境</h3>
+            <p>本プログラムを実行するには、以下の環境が必要です。</p>
+            <ul>
+                <li><strong>OS</strong>: Windows (コマンドプロンプトまたはPowerShell)</li>
+                <li><strong>ランタイム</strong>: .NET 8.0 SDK (開発・ビルド時) または .NET 8.0 Runtime (実行時)</li>
+            </ul>
+        </section>
+
+        <!-- 実行方法 -->
+        <section class="detail-card glass info-card">
+            <h3>3. 実行方法</h3>
+            <p>コマンドプロンプトやPowerShell等のコマンドラインから、入力となるTIFFファイルのパスと、出力したいPDFファイルのパスを指定して実行します。</p>
+            
+            <h4 style="margin-top: 20px; margin-bottom: 10px; color: #e2e8f0; font-size: 1.1rem;">実行コマンドの形式</h4>
+            <div class="code-block" style="margin-bottom: 20px;">
+                <code>.\teniko.exe &lt;入力TIFFファイルのパス&gt; &lt;出力PDFファイルのパス&gt;</code>
+            </div>
+
+            <h4 style="margin-bottom: 10px; color: #e2e8f0; font-size: 1.1rem;">実行例</h4>
+            <p>ビルドされた実行ファイル (<code>teniko.exe</code>) があるディレクトリで以下のように実行します。</p>
+            <div class="code-block" style="margin-bottom: 20px;">
+                <code>.\bin\Debug\net8.0\teniko.exe C:\input\sample.tif C:\output\result.pdf</code>
+            </div>
+            <p>※開発環境から <code>dotnet</code> コマンドで直接実行する場合は以下のようになります：</p>
+            <div class="code-block">
+                <code>dotnet run -- sample.tif result.pdf</code>
+            </div>
+        </section>
+
+        <!-- 主な機能と特徴 -->
+        <section class="detail-card glass success-card">
+            <h3>4. 主な機能と特徴</h3>
+            <h4 style="margin-bottom: 10px; color: #e2e8f0; font-size: 1.1rem;">アノテーションのPDF注釈化</h4>
+            <p>元のTIFFファイルに含まれるWangアノテーションは、画像に直接焼き付け（フラット化）られるのではなく、<strong>PDF標準の「注釈（Annotations）」として変換・付加</strong>されます。</p>
+            <ul>
+                <li>テキストや付箋（Note）はPDFのテキスト注釈（コメントアイコン等）になります。</li>
+                <li>直線、ハイライト、矩形などの図形アノテーションも、それぞれPDFの図形注釈として出力されます。</li>
+            </ul>
+            <p>これにより、出力されたPDFをAcrobat Reader等のPDFビュワーで開いた際、注釈パネルからアノテーションの表示/非表示の切り替えや、個別の削除を行うことが可能です。</p>
+
+            <h4 style="margin-top: 30px; margin-bottom: 10px; color: #e2e8f0; font-size: 1.1rem;">変換状態のログ出力</h4>
+            <p>TIFFファイルの仕様上、保存に使用したソフトによってはWangアノテーションデータがファイルから消失している場合があります。<br>
+            本プログラムは実行時にコンソール画面へ以下のようなログを出力し、アノテーションデータの有無を可視化します。</p>
+            <ul>
+                <li><strong>データが存在し変換した場合:</strong> <code style="color:#cbd5e1; background:#1e293b; padding:2px 6px; border-radius:4px;">[Debug] Page X: WangAnnotationDataを検出しました (〇〇 バイト)。</code></li>
+                <li><strong>データが存在しない場合:</strong> <code style="color:#cbd5e1; background:#1e293b; padding:2px 6px; border-radius:4px;">[Debug] Page X: WangAnnotationData (タグ32932) は見つかりませんでした。</code></li>
+            </ul>
+            <p>もしPDFにアノテーションが反映されていない場合は、このログを確認することで、元ファイルにデータが存在していたかどうかを切り分けることができます。</p>
+        </section>
+
+        <!-- 注意事項・既知の仕様 -->
+        <section class="detail-card glass warning-card">
+            <h3>5. 注意事項・既知の仕様</h3>
+            <ul>
+                <li><strong>表示位置のズレ:</strong> 元のTIFF画像が回転（Orientationタグ）して保存されている場合など、当時のソフトウェアの仕様上の問題で、変換後のPDF上でアノテーションの配置位置が元の見え方とズレるケースがあります。</li>
+                <li><strong>テキストの文字化け:</strong> Windows 95〜98時代の日本語環境（Shift-JIS）で作成されたテキストアノテーションを対象にデコードを行いますが、作成時の環境やデータによっては正しくテキストが変換できず文字化けする可能性があります。</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Teniko Project</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.detail-card').forEach(el => {
+                el.style.opacity = 0;
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

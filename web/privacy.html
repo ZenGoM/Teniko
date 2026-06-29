@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プライバシーポリシー - Teniko</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <header class="hero" style="padding: 60px 0 40px;">
+        <div class="container text-center">
+            <h1 class="logo-title" style="font-size: 3rem;">Teniko</h1>
+            <p class="tagline" style="margin-bottom: 15px;">プライバシーポリシー</p>
+            <a href="index.html" class="btn-primary" style="padding: 10px 24px; font-size: 0.95rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); box-shadow: none;">← 解説ページへ戻る</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="detail-card glass info-card">
+            <h3 style="margin-bottom: 15px; color: #fff; font-size: 1.3rem;">🛡️ 個人情報の取り扱いについて</h3>
+            <p>本アプリ（Teniko）は、ユーザーの個人情報を一切収集・取得・第三者へ送信することはありません。ローカル環境で完結するため、安心してご利用いただけます。</p>
+        </section>
+
+        <section class="detail-card glass info-card">
+            <h3 style="margin-bottom: 15px; color: #fff; font-size: 1.3rem;">📊 匿名クラッシュデータについて</h3>
+            <p>アプリのバグ修正や品質向上のため、Microsoft Storeが提供する標準の匿名クラッシュデータのみを参照する場合があります。このデータに個人を特定できる情報は含まれておりません。</p>
+        </section>
+
+        <section class="detail-card glass info-card">
+            <h3 style="margin-bottom: 15px; color: #fff; font-size: 1.3rem;">✉️ お問い合わせ時の情報について</h3>
+            <p>お問い合わせの際にいただいたメールアドレスなどの情報は、ご返信以外の目的には一切使用いたしません。</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Teniko Project</p>
+        <div style="margin-top: 15px;">
+            <a href="privacy.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.3s;">プライバシーポリシー</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.detail-card').forEach(el => {
+                el.style.opacity = 0;
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

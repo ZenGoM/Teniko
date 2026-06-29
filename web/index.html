@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teniko - TIFF to PDF Converter</title>
+    <meta name="description" content="レガシーなWangアノテーション付きTIFFをモダンなPDFへ変換するツール「Teniko」の解説ページです。">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <header class="hero">
+        <div class="container text-center">
+            <h1 class="logo-title">Teniko</h1>
+            <p class="tagline">TIFF to PDF Converter</p>
+            <p class="hero-desc">レガシーな「Wangアノテーション」を現代のPDF標準注釈へ。<br>過去のデータを鮮明に蘇らせるコマンドラインツールです。</p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="#usage" class="btn-primary">使い方を見る</a>
+                <a href="manual.html" class="btn-primary" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); box-shadow: none;">ユーザーマニュアルを読む</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="features">
+            <div class="card glass">
+                <div class="icon">📄</div>
+                <h2>PDFネイティブ注釈</h2>
+                <p>テキスト、ハイライト、図形などのWangアノテーションを、PDF標準の注釈として変換。Acrobat等のビュワーで表示切替・編集が可能です。</p>
+            </div>
+            <div class="card glass">
+                <div class="icon">⚡</div>
+                <h2>高速コマンドライン</h2>
+                <p>.NET 8.0で動作するコマンドラインツール。大量のTIFFファイルもバッチ処理でスムーズにPDFへ一括変換できます。</p>
+            </div>
+            <div class="card glass">
+                <div class="icon">🔍</div>
+                <h2>詳細なログ出力</h2>
+                <p>アノテーションデータ（タグ32932）の検出状況をページごとに可視化。古い仕様によるデータの欠落を素早く検知します。</p>
+            </div>
+        </section>
+
+        <section class="details-section">
+            <h2 class="section-title">解説: なぜPDF変換が必要なのか？</h2>
+            
+            <div class="detail-card glass warning-card">
+                <h3>⚠️ Wangアノテーションの危険性</h3>
+                <img src="../img/concept_wang_risks.png" alt="Wangアノテーションの危険性" class="detail-image">
+                <p>Wangアノテーション（コダック・アノテーション）を現代のシステムでそのまま保持・展開することは、セキュリティやガバナンスの観点から非常に大きなリスクを伴います。</p>
+                <ul>
+                    <li><strong>個人情報（PII）の漏洩:</strong> マスキング（黒塗り）が指示データとしてのみ保存されているため、現代のビューアで開くと隠したはずの機密データが露出してしまいます。</li>
+                    <li><strong>法的証跡の喪失:</strong> 独自のプライベートタグを使用しているため、一般的なビューアではスタンプや署名が「不可視」になり、証跡としての有効性が失われます。</li>
+                    <li><strong>システムクラッシュ:</strong> 不良なメタデータタグが書き込まれていることが多く、現代の画像処理ライブラリで致命的なエラーを引き起こす原因になります。</li>
+                </ul>
+            </div>
+
+            <div class="detail-card glass success-card">
+                <h3>✨ PDF/A変換のメリット</h3>
+                <img src="../img/concept_pdf_benefits.png" alt="PDF/A変換のメリット" class="detail-image">
+                <p>標準的なPDF/A形式へ変換（トランスコーディング）することで、データの価値を維持・向上させます。</p>
+                <ul>
+                    <li><strong>長期保存規格への適合:</strong> 標準的な注釈オブジェクトとして精密に変換し、将来にわたって確実に表示・閲覧できるようになります。法的証跡も復元されます。</li>
+                    <li><strong>コラボレーション価値の維持:</strong> バーンイン（画像への焼き付け）とは異なり、独立したベクトルオブジェクトとして保持されるため、テキスト抽出や検索への活用が可能です。</li>
+                    <li><strong>リスクの排除:</strong> 不良タグを取り除きクリーンなPDFへ再構築。マスキングも標準機能として安全に再構築されるため、機密データの露出を防ぎます。</li>
+                </ul>
+            </div>
+
+            <div class="detail-card glass info-card">
+                <h3>ℹ️ 変換時の損失・変容（デグレード）</h3>
+                <img src="../img/concept_degradation.png" alt="変換時の損失・変容" class="detail-image">
+                <p>独自フォーマットと現代の規格の差異により、一部の装飾やメタデータは以下の通り変容または失われます。</p>
+                <div class="grid-2col">
+                    <div>
+                        <h4>オブジェクト別の変容</h4>
+                        <ul>
+                            <li><strong>直線・図形:</strong> 破線や角の接合仕様が失われ実線へ。特殊な塗りつぶしもベタ塗りへ縮退。</li>
+                            <li><strong>曲面図形:</strong> 楕円パラメータは失われ、多角形（ポリライン）として近似描画。</li>
+                            <li><strong>テキスト・付箋:</strong> 影などの装飾が破棄。フォントのマッピングにより表示位置のズレが生じる場合があります。</li>
+                            <li><strong>手書き線:</strong> 滑らかな補間が引き継がれず角張って表示される場合があります。</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>メタデータの損失</h4>
+                        <ul>
+                            <li><strong>編集可否フラグ:</strong> 移動・回転・リサイズ可能といった属性は失われ、デフォルト値にリセットされます。</li>
+                            <li><strong>識別子と履歴:</strong> 固有識別子（Guid）や変更ユーザー名（ModifiedBy）のデータは失われます。</li>
+                            <li><strong>日時の上書き:</strong> 変更日時は保持されず、作成日時で強制的に上書きされます。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="usage" class="usage-section glass">
+            <h2>使い方 (Quick Start)</h2>
+            <div class="code-block-container">
+                <p>以下のコマンドを実行するだけで、TIFFファイルがPDFに変換されます。</p>
+                <div class="code-block">
+                    <code>.\teniko.exe &lt;入力TIFFファイルのパス&gt; &lt;出力PDFファイルのパス&gt;</code>
+                </div>
+                <p class="example-title">実行例:</p>
+                <div class="code-block">
+                    <code>.\bin\Debug\net8.0\teniko.exe sample.tif output.pdf</code>
+                </div>
+                <p class="example-title" style="margin-top:20px; font-size:0.9em;">※開発環境での実行:</p>
+                <div class="code-block" style="padding:15px;">
+                    <code>dotnet run -- sample.tif output.pdf</code>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Teniko Project</p>
+        <div style="margin-top: 15px;">
+            <a href="privacy.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">プライバシーポリシー</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.card, .usage-section, .detail-card').forEach(el => {
+                el.style.opacity = 0;
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
