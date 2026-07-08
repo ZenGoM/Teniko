@@ -25,17 +25,23 @@ Resize-Image $baseIconPath "$assetsDir\Square44x44Logo.png" 44 44
 Resize-Image $baseIconPath "$assetsDir\SplashScreen.png" 620 300
 Resize-Image $baseIconPath "$assetsDir\StoreLogo.png" 50 50
 
+# 1.5 Publish Application
+Write-Host "Publishing the application..."
+dotnet publish "Teniko.csproj" -c Release -r win-x64 --self-contained true -o "msix_build"
+
 # 2. Write AppxManifest.xml
 $manifestContent = @"
 <?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
          xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+         xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+         xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
          xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-         IgnorableNamespaces="uap rescap">
+         IgnorableNamespaces="uap uap5 desktop4 rescap">
 
   <Identity Name="ZenGoM.Teniko"
-            Publisher="CN=ZenGoM"
-            Version="1.0.0.0"
+            Publisher="CN=E2338FF3-89FC-4D73-967C-BC126F7A8857"
+            Version="1.0.4.0"
             ProcessorArchitecture="x64" />
 
   <Properties>
@@ -60,7 +66,9 @@ $manifestContent = @"
   <Applications>
     <Application Id="TenikoApp"
                  Executable="teniko.exe"
-                 EntryPoint="Windows.FullTrustApplication">
+                 EntryPoint="Windows.FullTrustApplication"
+                 desktop4:Subsystem="console"
+                 desktop4:SupportsMultipleInstances="true">
       <uap:VisualElements DisplayName="Teniko"
                           Description="TIFF to PDF Converter"
                           BackgroundColor="transparent"
@@ -69,6 +77,13 @@ $manifestContent = @"
         <uap:DefaultTile Wide310x150Logo="Assets\SplashScreen.png" />
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
+      <Extensions>
+        <uap5:Extension Category="windows.appExecutionAlias">
+          <uap5:AppExecutionAlias>
+            <uap5:ExecutionAlias Alias="teniko.exe" />
+          </uap5:AppExecutionAlias>
+        </uap5:Extension>
+      </Extensions>
     </Application>
   </Applications>
 </Package>
@@ -77,7 +92,7 @@ $manifestContent = @"
 Set-Content -Path "msix_build\AppxManifest.xml" -Value $manifestContent -Encoding UTF8
 
 # 3. Create Cert
-$cert = New-SelfSignedCertificate -Type Custom -Subject "CN=ZenGoM" -KeyUsage DigitalSignature -FriendlyName "Teniko MSIX Cert" -CertStoreLocation "Cert:\CurrentUser\My" -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}") -NotAfter (Get-Date).AddYears(1)
+$cert = New-SelfSignedCertificate -Type Custom -Subject "CN=E2338FF3-89FC-4D73-967C-BC126F7A8857" -KeyUsage DigitalSignature -FriendlyName "Teniko MSIX Cert" -CertStoreLocation "Cert:\CurrentUser\My" -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}") -NotAfter (Get-Date).AddYears(1)
 $pwd = ConvertTo-SecureString -String "teniko" -Force -AsPlainText
 Export-PfxCertificate -cert $cert -FilePath "TenikoCert.pfx" -Password $pwd
 

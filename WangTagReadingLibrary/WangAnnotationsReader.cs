@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 #if DEBUG
 using System.Diagnostics;
 #endif // DEBUG
@@ -146,7 +146,7 @@ namespace WangTagReadingLibrary
 #if DEBUG
             Debug.Assert(stream.AvailableBytes() >= dataSize);
 #endif // DEBUG
-            WangNamedBlockHeader header = WangAnnotationStructureReader.ReadNamedBlockHeader(stream, dataSize);
+            WangNamedBlockHeader header = WangAnnotationStructureReader.ReadNamedBlockHeader(stream, 12);
             if (header == null || header.Size > stream.AvailableBytes())
             {
                 return false;
